@@ -1,1 +1,1 @@
-Web:npm start
+web: node ./bin/www
