@@ -14,31 +14,33 @@
         vm.content = "Weather";
 
         vm.selectedDepartureICAO = "";
-        vm.selectedArrivalICAO = "";
+
         vm.selectedWeight = "";
 
         //check selected Departure
         if (SelectedData.selectedDepartureICAO !== null) {
             vm.selectedDepartureICAO = "Nowhere";
         }
-        
-        //check selected Arrival
-        if (SelectedData.selectedArrivalICAO !== null) {
-            vm.selectedArrivalICAO = "Canyon";
-        }
 
-        //check selected weight
-        //if (SelectedData.selectedWeight !== null) {
-        //   vm.selectedWeight = 18000;
-        //}
+
 
         //refactored for Angular 1.6 - removed success/error, used Promises...
-        vm.getDepartureWeather = function() {
+         vm.getDepartureWeather = function() {
             
-            var lat = 35;
-            console.log(lat);
-            var lon = "-101";
-            console.log(lon);            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showLocation);
+            }
+            else {
+                console.log('Geolocation is not supported by this browser.');
+            }
+            
+            
+            function showLocation(position) {
+                var lat = position.coords.latitude;
+                console.log("latitude: " + lat);
+              
+                var lon = position.coords.longitude;
+                console.log("longitude: " + lon);
 
             DarkskyWeather.getWeather(lat, lon)
                 .then(function(response) {
@@ -50,27 +52,12 @@
                 });
         }
 
-        //refactored for Angular 1.6 - removed success/error, used Promises...        
-        /*vm.getArrivalWeather = function() {
-            
-            var lat = 35;
-            var lon = "-101";
 
-            //refactored for Angular 1.6 - removed success/error, used Promises...
-            DarkskyWeather.getWeather(lat, lon)
-                .then(function(response) {
-                    vm.arrivalWeather = response.data;
-                    console.log(vm.arrivalWeather);
-                })
-                .catch(function(e) {
-                    console.log(e);
-                });
-        }*/
         
         //call services
         vm.getDepartureWeather();
        // vm.getArrivalWeather();
 
     }
-
+}
 })();
